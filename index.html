@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rubik's Cube Solver</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body class="bg-gray-900 min-h-screen text-white overflow-x-hidden flex flex-col">
+
+    <div class="flex-1 flex flex-col items-center justify-center w-full max-w-7xl mx-auto px-4 py-10">
+        
+        <header class="text-center mb-12 w-full">
+            <h1 class="text-4xl md:text-5xl font-bold bg-gradient-to-r from-pink-500 via-purple-500 to-cyan-500 bg-clip-text text-transparent pb-2">
+                Rubik's Cube Solver
+            </h1>
+            <p class="text-gray-400 mt-2 text-lg">Click on cube stickers to color them</p>
+        </header>
+
+        <div class="flex flex-col lg:flex-row justify-center items-center lg:items-start gap-8 xl:gap-12 w-full">
+            
+            <div class="bg-gray-800 rounded-2xl p-5 shadow-2xl w-full max-w-[420px] lg:max-w-none lg:w-[500px]">
+                <div id="cube-container" class="w-full aspect-square bg-gradient-to-br from-gray-700 to-gray-900 rounded-xl overflow-hidden cursor-grab active:cursor-grabbing shadow-inner">
+                    <canvas id="cube-canvas"></canvas>
+                </div>
+                <p class="text-gray-400 text-sm text-center mt-4">Drag to rotate • Click sticker to color</p>
+            </div>
+
+            <div class="flex flex-col gap-6 w-full max-w-[420px] lg:max-w-none lg:w-[400px]">
+                
+                <div id="color-counter" class="bg-gray-800 rounded-2xl p-6 w-full shadow-lg">
+                    <div class="text-center text-gray-300 font-semibold mb-4 text-lg">Color Count</div>
+                    <div class="grid grid-cols-3 gap-3" id="counter-display"></div>
+                </div>
+
+                <div class="color-palette bg-gray-800 rounded-2xl p-6 w-full shadow-lg">
+                    <div class="palette-label text-center lg:text-left mb-4 text-gray-300 font-semibold text-lg">Select Color</div>
+                    <div class="palette-colors flex flex-wrap justify-center lg:justify-start gap-3" id="color-palette"></div>
+                </div>
+
+                <div class="flex gap-4 w-full mt-2">
+                    <button id="solve-btn" class="flex-1 py-4 bg-gradient-to-r from-green-500 to-emerald-600 rounded-xl font-bold hover:from-green-400 hover:to-emerald-500 transition-all shadow-lg hover:shadow-green-500/25 flex items-center justify-center gap-2 text-lg">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                        </svg>
+                        Solve
+                    </button>
+                    <button id="reset-btn" class="flex-1 py-4 bg-gray-700 hover:bg-gray-600 rounded-xl font-bold transition-all flex items-center justify-center gap-2 text-lg shadow-lg">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
+                        </svg>
+                        Reset
+                    </button>
+                </div>
+            </div>
+
+            <div id="solution-panel" class="bg-gray-800 rounded-2xl p-6 shadow-2xl hidden w-full max-w-[420px] lg:max-w-none lg:w-[450px]">
+                <h3 class="text-2xl font-bold mb-5 text-center text-cyan-400">Solution</h3>
+                <div id="solution-steps" class="space-y-2 max-h-64 overflow-y-auto mb-5 custom-scrollbar"></div>
+                <div id="current-step" class="text-center text-4xl font-mono text-yellow-400 mb-5 py-3 bg-gray-700 rounded-lg shadow-inner"></div>
+                <div class="animation-controls">
+                    <div class="flex justify-center gap-3 mb-4">
+                        <button id="step-back-btn" class="px-5 py-2 bg-gray-700 hover:bg-gray-600 rounded-lg text-xl transition-colors" title="Previous">⏮</button>
+                        <button id="play-pause-btn" class="px-8 py-2 bg-purple-600 hover:bg-purple-500 rounded-lg text-xl transition-colors shadow-lg shadow-purple-500/20" title="Play/Pause">▶</button>
+                        <button id="step-forward-btn" class="px-5 py-2 bg-gray-700 hover:bg-gray-600 rounded-lg text-xl transition-colors" title="Next">⏭</button>
+                    </div>
+                    <div class="flex items-center gap-3 px-2">
+                        <span class="text-sm text-gray-400 font-medium">Speed:</span>
+                        <input type="range" id="speed-slider" min="200" max="1500" value="500" class="flex-1 accent-purple-500 cursor-pointer">
+                        <span id="speed-value" class="text-sm text-gray-400 w-14 text-right font-mono">500ms</span>
+                    </div>
+                </div>
+            </div>
+            
+        </div>
+    </div>
+
+    <div id="toast-container" class="fixed bottom-4 right-4 z-50 space-y-2"></div>
+
+    <script src="cube.js?v=2"></script>
+    <script src="cube-viewer.js?v=2"></script>
+    <script src="app.js?v=2"></script>
+</body>
+</html>
