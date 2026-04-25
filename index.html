@@ -7,7 +7,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
-    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="styles.css?v=3">
 </head>
 <body class="bg-gray-900 min-h-screen text-white overflow-x-hidden flex flex-col">
 
@@ -20,7 +20,7 @@
             <p class="text-gray-400 mt-2 text-lg">Click on cube stickers to color them</p>
         </header>
 
-        <div class="flex flex-col lg:flex-row justify-center items-center lg:items-start gap-8 xl:gap-12 w-full">
+        <div id="main-layout" class="flex flex-col lg:flex-row justify-center items-center lg:items-start gap-8 xl:gap-12 w-full">
             
             <div class="bg-gray-800 rounded-2xl p-5 shadow-2xl w-full max-w-[420px] lg:max-w-none lg:w-[500px]">
                 <div id="cube-container" class="w-full aspect-square bg-gradient-to-br from-gray-700 to-gray-900 rounded-xl overflow-hidden cursor-grab active:cursor-grabbing shadow-inner">
@@ -29,11 +29,11 @@
                 <p class="text-gray-400 text-sm text-center mt-4">Drag to rotate • Click sticker to color</p>
             </div>
 
-            <div class="flex flex-col gap-6 w-full max-w-[420px] lg:max-w-none lg:w-[400px]">
+            <div id="control-column" class="flex flex-col gap-6 w-full max-w-[420px] lg:max-w-none lg:w-[400px]">
                 
                 <div id="color-counter" class="bg-gray-800 rounded-2xl p-6 w-full shadow-lg">
                     <div class="text-center text-gray-300 font-semibold mb-4 text-lg">Color Count</div>
-                    <div class="grid grid-cols-3 gap-3" id="counter-display"></div>
+                    <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-2 gap-3" id="counter-display"></div>
                 </div>
 
                 <div class="color-palette bg-gray-800 rounded-2xl p-6 w-full shadow-lg">
@@ -58,9 +58,13 @@
             </div>
 
             <div id="solution-panel" class="bg-gray-800 rounded-2xl p-6 shadow-2xl hidden w-full max-w-[420px] lg:max-w-none lg:w-[450px]">
-                <h3 class="text-2xl font-bold mb-5 text-center text-cyan-400">Solution</h3>
-                <div id="solution-steps" class="space-y-2 max-h-64 overflow-y-auto mb-5 custom-scrollbar"></div>
-                <div id="current-step" class="text-center text-4xl font-mono text-yellow-400 mb-5 py-3 bg-gray-700 rounded-lg shadow-inner"></div>
+                <h3 class="text-2xl font-bold mb-5 text-center text-cyan-400">Step-by-Step Solution</h3>
+                <div id="solution-status" class="text-center text-sm text-gray-400 mb-3">Step 0 of 0</div>
+                <div class="mb-5 px-4 py-4 bg-gray-700 rounded-lg shadow-inner">
+                    <div id="current-step" class="text-center text-lg leading-relaxed text-yellow-300 font-semibold">Ready</div>
+                    <div id="current-step-notation" class="text-center text-sm font-mono text-cyan-300 mt-3">Notation will appear here</div>
+                    <div id="current-step-hint" class="text-center text-xs text-gray-400 mt-2">Watch the cube animation. Clockwise means while looking directly at that face.</div>
+                </div>
                 <div class="animation-controls">
                     <div class="flex justify-center gap-3 mb-4">
                         <button id="step-back-btn" class="px-5 py-2 bg-gray-700 hover:bg-gray-600 rounded-lg text-xl transition-colors" title="Previous">⏮</button>
@@ -80,8 +84,10 @@
 
     <div id="toast-container" class="fixed bottom-4 right-4 z-50 space-y-2"></div>
 
-    <script src="cube.js?v=2"></script>
-    <script src="cube-viewer.js?v=2"></script>
-    <script src="app.js?v=2"></script>
+    <script src="vendor/cubejs-core.js"></script>
+    <script src="vendor/cubejs-solve.js"></script>
+    <script src="cube.js?v=4"></script>
+    <script src="cube-viewer.js?v=3"></script>
+    <script src="app.js?v=7"></script>
 </body>
 </html>

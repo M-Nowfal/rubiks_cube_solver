@@ -135,6 +135,7 @@ class CubeViewer {
                 for (let z = -1; z <= 1; z++) {
                     const cubieGroup = new THREE.Group();
                     cubieGroup.position.set(x, y, z);
+                    cubieGroup.userData.homePosition = new THREE.Vector3(x, y, z);
                     
                     const addSticker = (faceName, localPos, rotX, rotY, worldX, worldY, worldZ, colorIndex) => {
                         const faceColor = faceColors[faceName];
@@ -381,11 +382,19 @@ class CubeViewer {
 
     setColors(colors) {
         this.colors = JSON.parse(JSON.stringify(colors));
+        this.resetCubieTransforms();
         
         for (const sticker of this.stickers) {
             const { face, colorIndex } = sticker.userData;
             const color = this.colors[face][colorIndex];
             sticker.material.color.set(color);
+        }
+    }
+
+    resetCubieTransforms() {
+        for (const cubie of this.cubies) {
+            cubie.position.copy(cubie.userData.homePosition);
+            cubie.rotation.set(0, 0, 0);
         }
     }
 
@@ -589,6 +598,7 @@ class CubeViewer {
                     this.cubeGroup.attach(c);
                 });
                 this.scene.remove(rotatingGroup);
+                this.resetCubieTransforms();
                 
                 if (prime) {
                     this.rotateFaceCCW(face);
@@ -704,6 +714,7 @@ class CubeViewer {
         this.isPlaying = false;
         
         this.colors = JSON.parse(JSON.stringify(initialColors));
+        this.resetCubieTransforms();
         this.updateStickerColors();
     }
 }

@@ -31,6 +31,61 @@ html::-webkit-scrollbar {
     box-shadow: 0 0 15px rgba(255,255,255,0.5);
 }
 
+.palette-locked {
+    opacity: 0.6;
+}
+
+.palette-locked .palette-label::after {
+    content: " (Locked during solution)";
+    color: #9ca3af;
+    font-size: 0.8rem;
+    font-weight: 500;
+}
+
+.palette-color.disabled {
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+    filter: saturate(0.8);
+}
+
+.palette-color.disabled:hover {
+    transform: none;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+}
+
+.counter-item {
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    align-items: center;
+    gap: 0.65rem;
+    min-width: 0;
+    padding: 0.75rem;
+    background: #374151;
+    border-radius: 0.75rem;
+}
+
+.counter-swatch {
+    width: 1.5rem;
+    height: 1.5rem;
+    border-radius: 0.375rem;
+    flex-shrink: 0;
+}
+
+.counter-name {
+    min-width: 0;
+    color: #d1d5db;
+    font-size: 0.95rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.counter-value {
+    min-width: 1.25rem;
+    text-align: right;
+}
+
 #cube-container {
     touch-action: none;
 }
@@ -47,6 +102,22 @@ html::-webkit-scrollbar {
 
 .animation-controls button:hover {
     transform: scale(1.05);
+}
+
+body.solution-visible #control-column {
+    width: 430px;
+}
+
+body.solution-visible #counter-display {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+body.solution-visible #color-counter {
+    padding: 1.25rem;
+}
+
+body.solution-visible .counter-item {
+    padding: 0.85rem 0.9rem;
 }
 
 #solution-steps {
@@ -135,5 +206,11 @@ html::-webkit-scrollbar {
     }
     to {
         opacity: 0;
+    }
+}
+
+@media (max-width: 1023px) {
+    body.solution-visible #control-column {
+        width: 100%;
     }
 }
