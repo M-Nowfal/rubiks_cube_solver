@@ -551,6 +551,7 @@ class CubeViewer {
         const startTime = performance.now();
         const face = move[0];
         const prime = move.includes("'");
+        const double = move.includes("2");
         
         const rotatingGroup = new THREE.Group();
         this.scene.add(rotatingGroup);
@@ -572,7 +573,9 @@ class CubeViewer {
             rotatingGroup.attach(c);
         });
         
-        const targetRotation = prime ? Math.PI / 2 : -Math.PI / 2;
+        const targetRotation = double
+            ? -Math.PI
+            : (prime ? Math.PI / 2 : -Math.PI / 2);
         
         const axis = new THREE.Vector3();
         switch (face) {
@@ -600,10 +603,13 @@ class CubeViewer {
                 this.scene.remove(rotatingGroup);
                 this.resetCubieTransforms();
                 
-                if (prime) {
-                    this.rotateFaceCCW(face);
-                } else {
-                    this.rotateFaceCW(face);
+                const turnCount = double ? 2 : 1;
+                for (let i = 0; i < turnCount; i++) {
+                    if (prime) {
+                        this.rotateFaceCCW(face);
+                    } else {
+                        this.rotateFaceCW(face);
+                    }
                 }
                 
                 this.isAnimating = false;
