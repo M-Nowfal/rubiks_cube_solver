@@ -26,6 +26,16 @@
                 <div id="cube-container" class="w-full aspect-square bg-gradient-to-br from-gray-700 to-gray-900 rounded-xl overflow-hidden cursor-grab active:cursor-grabbing shadow-inner">
                     <canvas id="cube-canvas"></canvas>
                 </div>
+                <div id="mobile-step-controls" class="hidden lg:hidden mt-4 rounded-xl border border-white/10 bg-gray-700/70 px-4 py-4 shadow-inner">
+                    <div id="mobile-solution-status" class="text-center text-xs text-gray-400">Step 0 of 0</div>
+                    <div id="mobile-current-step" class="text-center text-base leading-relaxed text-yellow-300 font-semibold mt-2">Ready</div>
+                    <div id="mobile-current-step-notation" class="text-center text-xs font-mono text-cyan-300 mt-2">Notation will appear here</div>
+                    <div class="flex gap-2 mt-4">
+                        <button id="mobile-step-back-btn" class="flex-1 px-4 py-3 bg-gray-700 hover:bg-gray-600 rounded-lg text-sm font-semibold transition-colors" title="Previous">Previous</button>
+                        <button id="mobile-play-pause-btn" class="flex-1 px-4 py-3 bg-purple-600 hover:bg-purple-500 rounded-lg text-sm font-semibold transition-colors shadow-lg shadow-purple-500/20" title="Restart">Restart</button>
+                        <button id="mobile-step-forward-btn" class="flex-1 px-4 py-3 bg-gray-700 hover:bg-gray-600 rounded-lg text-sm font-semibold transition-colors" title="Next">Next</button>
+                    </div>
+                </div>
                 <p class="text-gray-400 text-sm text-center mt-4">Drag to rotate • Click sticker to color</p>
             </div>
 
@@ -88,6 +98,6 @@
     <script src="vendor/cubejs-solve.js"></script>
     <script src="cube.js?v=4"></script>
     <script src="cube-viewer.js?v=4"></script>
-    <script src="app.js?v=7"></script>
+    <script src="app.js?v=8"></script>
 </body>
 </html>

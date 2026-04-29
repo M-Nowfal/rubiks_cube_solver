@@ -27,6 +27,7 @@ class RubiksCubeApp {
         this.isSolutionMode = false;
         this.currentAnimationIndex = 0;
         this.initialColors = null;
+        this.stepUi = null;
 
         this.initViewer();
         this.initColorPalette();
@@ -108,26 +109,62 @@ class RubiksCubeApp {
     }
 
     initAnimationControls() {
-        const restartBtn = document.getElementById('play-pause-btn');
-        const nextBtn = document.getElementById('step-forward-btn');
-        const previousBtn = document.getElementById('step-back-btn');
+        const restartButtons = [
+            document.getElementById('play-pause-btn'),
+            document.getElementById('mobile-play-pause-btn')
+        ].filter(Boolean);
+        const nextButtons = [
+            document.getElementById('step-forward-btn'),
+            document.getElementById('mobile-step-forward-btn')
+        ].filter(Boolean);
+        const previousButtons = [
+            document.getElementById('step-back-btn'),
+            document.getElementById('mobile-step-back-btn')
+        ].filter(Boolean);
 
-        restartBtn.textContent = 'Restart';
-        restartBtn.title = 'Restart solution';
-        nextBtn.textContent = 'Next';
-        nextBtn.title = 'Next step';
-        previousBtn.textContent = 'Previous';
-        previousBtn.title = 'Previous step';
-        restartBtn.classList.remove('text-xl');
-        nextBtn.classList.remove('text-xl');
-        previousBtn.classList.remove('text-xl');
-        restartBtn.classList.add('text-sm', 'font-semibold');
-        nextBtn.classList.add('text-sm', 'font-semibold');
-        previousBtn.classList.add('text-sm', 'font-semibold');
+        this.stepUi = {
+            statusEls: [
+                document.getElementById('solution-status'),
+                document.getElementById('mobile-solution-status')
+            ].filter(Boolean),
+            currentStepEls: [
+                document.getElementById('current-step'),
+                document.getElementById('mobile-current-step')
+            ].filter(Boolean),
+            notationEls: [
+                document.getElementById('current-step-notation'),
+                document.getElementById('mobile-current-step-notation')
+            ].filter(Boolean),
+            hintEls: [document.getElementById('current-step-hint')].filter(Boolean),
+            mobilePanel: document.getElementById('mobile-step-controls'),
+            previousButtons,
+            nextButtons,
+            restartButtons
+        };
 
-        restartBtn.addEventListener('click', () => this.restartSolution());
-        nextBtn.addEventListener('click', () => this.stepForward());
-        previousBtn.addEventListener('click', () => this.stepBack());
+        restartButtons.forEach((button) => {
+            button.textContent = 'Restart';
+            button.title = 'Restart solution';
+            button.classList.remove('text-xl');
+            button.classList.add('text-sm', 'font-semibold');
+            button.addEventListener('click', () => this.restartSolution());
+        });
+
+        nextButtons.forEach((button) => {
+            button.textContent = 'Next';
+            button.title = 'Next step';
+            button.classList.remove('text-xl');
+            button.classList.add('text-sm', 'font-semibold');
+            button.addEventListener('click', () => this.stepForward());
+        });
+
+        previousButtons.forEach((button) => {
+            button.textContent = 'Previous';
+            button.title = 'Previous step';
+            button.classList.remove('text-xl');
+            button.classList.add('text-sm', 'font-semibold');
+            button.addEventListener('click', () => this.stepBack());
+        });
 
         const speedSlider = document.getElementById('speed-slider');
         const speedValue = document.getElementById('speed-value');
@@ -250,6 +287,9 @@ class RubiksCubeApp {
 
         panel.classList.remove('hidden');
         document.body.classList.add('solution-visible');
+        if (this.stepUi && this.stepUi.mobilePanel) {
+            this.stepUi.mobilePanel.classList.remove('hidden');
+        }
         this.isSolutionMode = true;
         this.updateColorEditingState();
 
@@ -301,42 +341,57 @@ class RubiksCubeApp {
         this.updateManualStepDisplay();
     }
 
+    setStepText(elements, text) {
+        elements.forEach((element) => {
+            element.textContent = text;
+        });
+    }
+
     updateManualStepDisplay() {
-        const currentStepEl = document.getElementById('current-step');
-        const notationEl = document.getElementById('current-step-notation');
-        const hintEl = document.getElementById('current-step-hint');
-        const statusEl = document.getElementById('solution-status');
-        const previousBtn = document.getElementById('step-back-btn');
-        const nextBtn = document.getElementById('step-forward-btn');
-        const restartBtn = document.getElementById('play-pause-btn');
+        const {
+            statusEls,
+            currentStepEls,
+            notationEls,
+            hintEls,
+            previousButtons,
+            nextButtons,
+            restartButtons
+        } = this.stepUi;
         const totalMoves = this.solution.length;
         const isComplete = totalMoves > 0 && this.currentAnimationIndex >= totalMoves;
 
         if (totalMoves === 0) {
-            statusEl.textContent = 'Step 0 of 0';
-            currentStepEl.textContent = 'Ready';
-            notationEl.textContent = 'Notation will appear here';
-            hintEl.textContent = 'Watch the cube animation. Clockwise means while looking directly at that face.';
+            this.setStepText(statusEls, 'Step 0 of 0');
+            this.setStepText(currentStepEls, 'Ready');
+            this.setStepText(notationEls, 'Notation will appear here');
+            this.setStepText(hintEls, 'Watch the cube animation. Clockwise means while looking directly at that face.');
         } else if (isComplete) {
-            statusEl.textContent = `All ${totalMoves} steps completed`;
-            currentStepEl.textContent = 'Solved';
-            notationEl.textContent = 'All moves completed';
-            hintEl.textContent = 'Use Restart to watch the full solution again.';
+            this.setStepText(statusEls, `All ${totalMoves} steps completed`);
+            this.setStepText(currentStepEls, 'Solved');
+            this.setStepText(notationEls, 'All moves completed');
+            this.setStepText(hintEls, 'Use Restart to watch the full solution again.');
         } else {
             const move = this.solution[this.currentAnimationIndex];
-            statusEl.textContent = `Next step ${this.currentAnimationIndex + 1} of ${totalMoves}`;
-            currentStepEl.textContent = this.getMoveInstruction(move);
-            notationEl.textContent = `Notation: ${move} - ${this.getMoveNotationExplanation(move)}`;
-            hintEl.textContent = 'Watch the cube and press Next when you are ready for the following move.';
+            this.setStepText(statusEls, `Next step ${this.currentAnimationIndex + 1} of ${totalMoves}`);
+            this.setStepText(currentStepEls, this.getMoveInstruction(move));
+            this.setStepText(notationEls, `Notation: ${move} - ${this.getMoveNotationExplanation(move)}`);
+            this.setStepText(hintEls, 'Watch the cube and press Next when you are ready for the following move.');
         }
 
-        previousBtn.disabled = this.currentAnimationIndex === 0;
-        nextBtn.disabled = totalMoves === 0 || isComplete;
-        restartBtn.disabled = totalMoves === 0;
+        previousButtons.forEach((button) => {
+            button.disabled = this.currentAnimationIndex === 0;
+            this.updateButtonState(button);
+        });
 
-        this.updateButtonState(previousBtn);
-        this.updateButtonState(nextBtn);
-        this.updateButtonState(restartBtn);
+        nextButtons.forEach((button) => {
+            button.disabled = totalMoves === 0 || isComplete;
+            this.updateButtonState(button);
+        });
+
+        restartButtons.forEach((button) => {
+            button.disabled = totalMoves === 0;
+            this.updateButtonState(button);
+        });
     }
 
     getMoveInstruction(move) {
@@ -399,6 +454,9 @@ class RubiksCubeApp {
 
         document.getElementById('solution-panel').classList.add('hidden');
         document.body.classList.remove('solution-visible');
+        if (this.stepUi && this.stepUi.mobilePanel) {
+            this.stepUi.mobilePanel.classList.add('hidden');
+        }
 
         this.viewer.setColors(SOLVED_STATE);
         this.updateColorCounter(this.viewer.getColorCounts());
